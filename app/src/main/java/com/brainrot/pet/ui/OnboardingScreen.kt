@@ -118,7 +118,7 @@ fun PermissionSteps(permissions: PermissionState, onPermissionsChanged: () -> Un
             onAccept = {
                 showDisclosure = false
                 triedAccessibility = true
-                openAccessibility(context)
+                open(context, Permissions.accessibilityIntent(context))
             },
             onDecline = { showDisclosure = false },
             onRestrictedHelp = { open(context, Permissions.appDetailsIntent(context)) },
@@ -177,15 +177,6 @@ private fun AccessibilityHelpCard(onOpenAppInfo: () -> Unit) {
         Text(stringResource(Permissions.accessibilitySteps()), style = MaterialTheme.typography.bodyMedium)
         Text(stringResource(R.string.a11y_help_restricted), style = MaterialTheme.typography.bodyMedium)
         FilledTonalButton(onClick = onOpenAppInfo) { Text(stringResource(R.string.disclosure_open_app_info)) }
-    }
-}
-
-private fun openAccessibility(context: Context) {
-    try {
-        context.startActivity(Permissions.accessibilityIntent(context))
-    } catch (e: RuntimeException) {
-        BrainLog.w("a11y_details_intent_failed", e)
-        open(context, Permissions.accessibilityListIntent(context))
     }
 }
 

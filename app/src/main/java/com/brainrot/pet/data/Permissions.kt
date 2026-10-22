@@ -70,20 +70,11 @@ object Permissions {
         Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
 
     /**
-     * Opens Brain Rot's own switch where the system supports it (Android 11+), otherwise the
-     * Accessibility list with our entry highlighted (supported by Pixel/AOSP and many OEM builds).
-     * Callers fall back to [accessibilityListIntent] if this one cannot be started.
+     * The Accessibility list with our entry highlighted where Settings supports it (Pixel/AOSP and
+     * many OEM builds). Opening our own switch directly is a system-only screen, so the in-app
+     * brand-specific steps cover the last tap.
      */
     fun accessibilityIntent(context: Context): Intent {
-        val component = ComponentName(context, ReelAccessibilityService::class.java).flattenToString()
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            Intent(Settings.ACTION_ACCESSIBILITY_DETAILS_SETTINGS).putExtra(Intent.EXTRA_COMPONENT_NAME, component)
-        } else {
-            accessibilityListIntent(context)
-        }
-    }
-
-    fun accessibilityListIntent(context: Context): Intent {
         val component = ComponentName(context, ReelAccessibilityService::class.java).flattenToString()
         return Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
             .putExtra(EXTRA_FRAGMENT_ARG_KEY, component)
