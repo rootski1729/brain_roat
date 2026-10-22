@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- What the brain says. Keep lines short: they appear in a small bubble next to the pet. -->
+<resources>
+    <string-array name="speech_fresh">
+        <item>Feeling sharp today! ✨</item>
+        <item>Neurons: firing. Vibes: immaculate.</item>
+        <item>I could learn a new language right now.</item>
+        <item>Fresh as a walnut. 🌰</item>
+    </string-array>
+    <string-array name="speech_foggy">
+        <item>A bit foggy up here…</item>
+        <item>What was I thinking about?</item>
+        <item>Maybe a short break soon? ☁️</item>
+    </string-array>
+    <string-array name="speech_restless">
+        <item>Can\'t… sit… still…</item>
+        <item>So many tabs open in here!</item>
+        <item>My thoughts are scrolling by themselves. 😬</item>
+        <item>Put me down for 10 minutes?</item>
+    </string-array>
+    <string-array name="speech_fried">
+        <item>I\'m sizzling. 🔥</item>
+        <item>Do you smell something burning? It\'s me.</item>
+        <item>Attention span: 3 secon—</item>
+        <item>Please. A walk. Anywhere.</item>
+    </string-array>
+    <string-array name="speech_rotten">
+        <item>bruh. 🪰</item>
+        <item>I have become the algorithm.</item>
+        <item>Brain.exe has stopped responding.</item>
+        <item>Screen off. Now. I\'m begging.</item>
+    </string-array>
+    <string-array name="speech_hungry">
+        <item>I\'m hungry… a walnut maybe? 🌰</item>
+        <item>Feed me something that isn\'t content.</item>
+    </string-array>
+    <string-array name="speech_thirsty">
+        <item>Water, please. I\'m 75% water, you know. 💧</item>
+        <item>So thirsty… go drink some water too!</item>
+    </string-array>
+    <string-array name="speech_tired">
+        <item>So sleepy… 😴</item>
+        <item>My battery is lower than yours.</item>
+    </string-array>
+    <string-array name="speech_overstimulated">
+        <item>We\'ve been staring for ages. Blink with me?</item>
+        <item>Too many pixels. Need a break.</item>
+    </string-array>
+    <string-array name="speech_near_limit">
+        <item>Heads up, we\'re almost at your limit.</item>
+        <item>Nearly there. Maybe stop on a good one?</item>
+    </string-array>
+    <string-array name="speech_fed">
+        <item>Nom nom! 😋</item>
+        <item>Brain food! Thank you!</item>
+    </string-array>
+    <string-array name="speech_watered">
+        <item>Ahh, refreshing! 💧</item>
+        <item>Hydrated and thriving.</item>
+    </string-array>
+    <string-array name="speech_full">
+        <item>I\'m full, thanks!</item>
+        <item>Couldn\'t possibly. Maybe later.</item>
+    </string-array>
+    <string-array name="speech_too_soon">
+        <item>I just had some!</item>
+        <item>Give me a moment to digest.</item>
+    </string-array>
+    <string-array name="speech_blocked">
+        <item>We agreed on this limit. I\'m holding you to it.</item>
+        <item>Go outside. Touch grass. I\'ll wait. 🌱</item>
+        <item>One more reel won\'t feel better. Trust me.</item>
+        <item>Let\'s do literally anything else.</item>
+    </string-array>
+    <string-array name="speech_poked">
+        <item>Hey! Poking me won\'t unlock anything.</item>
+        <item>Ow. Still no.</item>
+        <item>I\'m a brain, not a button.</item>
+    </string-array>
+    <string-array name="speech_rested">
+        <item>That break felt amazing! 🌞</item>
+        <item>Recharged! Thanks for putting me down.</item>
+    </string-array>
+</resources>

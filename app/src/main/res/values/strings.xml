@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Brain Rot</string>
+
+    <!-- Tabs -->
+    <string name="tab_brain">Brain</string>
+    <string name="tab_limits">Limits</string>
+    <string name="tab_stats">Stats</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Stages -->
+    <string name="stage_fresh">Fresh</string>
+    <string name="stage_foggy">Foggy</string>
+    <string name="stage_restless">Restless</string>
+    <string name="stage_fried">Fried</string>
+    <string name="stage_rotten">Rotten</string>
+
+    <!-- Meters and care -->
+    <string name="meter_rot">🧠 Rot</string>
+    <string name="meter_food">🌰 Food</string>
+    <string name="meter_water">💧 Water</string>
+    <string name="meter_energy">⚡ Energy</string>
+    <string name="action_feed">🌰 Feed</string>
+    <string name="action_water">💧 Water</string>
+    <string name="action_hide_hour">🙈 Hide 1h</string>
+    <string name="action_open_app">🏠 Open</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_reset">Reset</string>
+    <string name="action_restart">Restart</string>
+    <string name="food_walnut">🌰 Walnut</string>
+    <string name="food_blueberries">🫐 Blueberries</string>
+    <string name="food_salmon">🐟 Salmon</string>
+    <string name="care_too_soon">Not yet. Try again in %1$d min.</string>
+
+    <!-- Overlay -->
+    <string name="bubble_cd">%1$s the brain, %2$s. Tap for care, drag to move, long-press to open the app.</string>
+    <string name="panel_subtitle">%1$s · health %2$d%%</string>
+    <string name="panel_stats">🎬 %1$d reels · ⏱ %2$s today</string>
+    <string name="speech_reel_milestone">That\'s %1$d reels today. My neurons are buffering… 😵‍💫</string>
+
+    <!-- Block screen -->
+    <string name="block_title">🧠 %1$s says: not now.</string>
+    <string name="block_brain_cd">Your brain pet, bouncing around angrily. Tap it to poke it.</string>
+    <string name="block_go_home">Take me out of here</string>
+    <string name="block_leave_shorts">Leave Shorts / Reels</string>
+    <string name="block_unlock">Unlock in Brain Rot…</string>
+    <string name="block_reason_app_time">You\'ve used %1$s for %2$s today. Your limit is %3$s.</string>
+    <string name="block_reason_app_reels">%1$d reels in %2$s today. Your limit was %3$d.</string>
+    <string name="block_reason_total_reels">%1$d reels today across all apps. Your limit was %2$d.</string>
+    <string name="block_reason_total_screen">%1$s on your phone today. Your limit is %2$s.</string>
+
+    <!-- Limit kinds and amounts -->
+    <string name="limit_kind_app_time">Time</string>
+    <string name="limit_kind_app_reels">Reels</string>
+    <string name="limit_kind_total_reels">Reels (all apps)</string>
+    <string name="limit_kind_total_screen">Screen time (whole phone)</string>
+    <string name="limit_amount_reels">%1$d / %2$d</string>
+    <string name="limit_amount_time">%1$s / %2$s</string>
+
+    <!-- Unlock / mindful wait -->
+    <string name="unlock_title">Unlock a little more?</string>
+    <string name="unlock_message">%1$s\n\nUnlocks today: %2$d. Each one makes the next wait longer.</string>
+    <string name="unlock_confirm_minutes">Give me %1$d more minutes</string>
+    <string name="unlock_confirm_reels">Give me %1$d more reels</string>
+    <string name="unlock_button">Unlock…</string>
+    <string name="wait_breathe_in">Breathe in…</string>
+    <string name="wait_breathe_out">Breathe out…</string>
+    <string name="wait_seconds_left">%1$d s</string>
+    <string name="wait_keep_limit">Keep my limit</string>
+    <string name="loosen_title">Loosen your limits?</string>
+    <string name="loosen_message">Raising or removing a limit takes a short pause first, so it\'s a choice and not a reflex.</string>
+
+    <!-- Home -->
+    <string name="home_stage_health">%1$s · health %2$d%%</string>
+    <string name="home_care_title">Take care of me</string>
+    <string name="home_rest_tip">Rest is the real cure: every minute with the screen off heals me. A night\'s sleep resets me completely.</string>
+    <string name="home_today_title">Today</string>
+    <string name="home_limits_title">Your limits</string>
+    <string name="stat_reels">🎬 Reels watched</string>
+    <string name="stat_screen_time">⏱ Screen time</string>
+    <string name="stat_short_video">📱 In Shorts / Reels</string>
+    <string name="stat_rest">😴 Rested</string>
+    <string name="stat_blocks">🛑 Times I stopped you</string>
+    <string name="stat_feeds">🌰 Meals</string>
+    <string name="stat_waters">💧 Drinks</string>
+    <string name="stat_unlocks">🔓 Unlocks</string>
+    <string name="warn_permissions">I can\'t see everything yet. Some permissions are missing.</string>
+    <string name="warn_no_accessibility">Reel counting and instant blocking need the accessibility service.</string>
+    <string name="warn_fix_in_settings">Open Settings ⚙️ to fix this.</string>
+    <string name="warn_service_stopped">My heartbeat service isn\'t running, so I can\'t watch your limits.</string>
+    <string name="warn_detection">I haven\'t seen any reels in %1$s today. If you did watch some, the app probably changed its layout and reel counting may need an update.</string>
+
+    <!-- Limits screen -->
+    <string name="limits_enforce">Block when a limit is reached</string>
+    <string name="limits_enforce_desc">Off means limits are only tracked.</string>
+    <string name="limits_daily_title">Whole phone, per day</string>
+    <string name="limits_daily_reels">Reels per day</string>
+    <string name="limits_daily_minutes">Screen time per day (minutes)</string>
+    <string name="limits_no_limit">No limit</string>
+    <string name="limits_field_invalid">Use whole numbers only (digits 0–9)</string>
+    <string name="limits_preset_gentle">Gentle: 30 reels, 3 h</string>
+    <string name="limits_preset_strict">Strict: 10 reels, 2 h</string>
+    <string name="limits_reels_note">Reel limits only block the Shorts/Reels player, so normal videos and messages keep working.</string>
+    <string name="limits_apps_title">Per app</string>
+    <string name="limits_apps_empty">No app limits yet.</string>
+    <string name="limits_add_app">+ Add an app</string>
+    <string name="limits_app_minutes">Minutes / day</string>
+    <string name="limits_app_reels">Reels / day</string>
+    <string name="limits_remove">Remove</string>
+    <string name="limits_save">Save limits</string>
+    <string name="limits_saved">Limits saved.</string>
+    <string name="limits_invalid">Some numbers aren\'t valid. Fix the red fields.</string>
+    <string name="limits_loosen_note">Tightening is instant. Loosening a limit asks for a short mindful pause.</string>
+    <string name="picker_title">Choose an app</string>
+    <string name="picker_search">Search</string>
+    <string name="picker_loading">Loading apps…</string>
+
+    <!-- Stats -->
+    <string name="stats_reels_title">Reels, last 14 days</string>
+    <string name="stats_screen_title">Screen time (minutes), last 14 days</string>
+    <string name="stats_average">Average on active days: %1$s</string>
+    <string name="stats_apps_title">Top apps today</string>
+    <string name="stats_apps_empty">No usage data yet. Grant usage access to see it.</string>
+    <string name="stats_app_reels">%1$d reels</string>
+    <string name="stats_care_title">Care today</string>
+
+    <!-- Settings -->
+    <string name="settings_pet_title">Your brain</string>
+    <string name="settings_overlay">Show floating brain</string>
+    <string name="settings_overlay_desc">The brain on top of other apps. Blocking works even when it\'s off.</string>
+    <string name="settings_roaming">Let it wander when restless</string>
+    <string name="settings_roaming_desc">From Restless on, the brain paces the screen edges; when Fried it walks into the middle.</string>
+    <string name="settings_speech">Speech bubbles</string>
+    <string name="settings_speech_desc">Little comments about how it feels.</string>
+    <string name="settings_reels">Count reels</string>
+    <string name="settings_reels_desc">Uses the accessibility service on YouTube, Instagram, TikTok and Snapchat.</string>
+    <string name="settings_bubble_size">Bubble size: %1$d dp</string>
+    <string name="reels_off_message">You have reel limits. With counting off they stop working, so this takes the same pause as loosening a limit.</string>
+    <string name="reels_off_confirm">Turn off reel counting</string>
+    <string name="settings_show_bubble_now">Show the bubble again now</string>
+    <string name="settings_permissions_title">Permissions</string>
+    <string name="settings_diagnostics_title">Diagnostics</string>
+    <string name="settings_privacy_title">Privacy</string>
+    <string name="settings_reset_brain">Reset brain to fresh</string>
+    <string name="settings_reset_brain_desc">Sets rot, food, water and energy back to start. Today\'s counts and your limits stay.</string>
+    <string name="diag_service">Heartbeat service running</string>
+    <string name="diag_accessibility">Accessibility connected</string>
+    <string name="diag_last_event">Last accessibility event</string>
+    <string name="diag_last_tick">Last brain update</string>
+    <string name="diag_usage_updated">Usage refreshed</string>
+    <string name="diag_version">Version</string>
+    <string name="diag_yes">Yes</string>
+    <string name="diag_no">No</string>
+    <string name="diag_never">Never</string>
+    <string name="diag_seconds_ago">%1$d s ago</string>
+    <string name="diag_logcat_hint">Debug logs: adb logcat -s %1$s</string>
+    <string name="privacy_note">Everything stays on this phone. Brain Rot has no internet permission, reads no messages or captions, and only looks at the layout of Shorts/Reels players to count swipes.</string>
+
+    <!-- Onboarding and permissions -->
+    <string name="onboarding_brain_cd">A happy, fresh brain pet</string>
+    <string name="onboarding_title">Meet your brain</string>
+    <string name="onboarding_intro">It lives on top of your screen. Every reel and every hour of scrolling makes it more restless and rotten. Feed it, give it water, and above all put your phone down to let it heal. Set limits and it will stand in your way.</string>
+    <string name="onboarding_name">Name your brain</string>
+    <string name="onboarding_start">Start</string>
+    <string name="onboarding_required_note">Usage access and display over other apps are required.</string>
+    <string name="perm_grant">Grant</string>
+    <string name="perm_optional">optional</string>
+    <string name="perm_usage_title">Usage access</string>
+    <string name="perm_usage_desc">Measures screen time per app. Required.</string>
+    <string name="perm_overlay_title">Display over other apps</string>
+    <string name="perm_overlay_desc">Lets the brain float on screen and block apps when a limit is reached. Required.</string>
+    <string name="perm_accessibility_title">Reel counting</string>
+    <string name="perm_accessibility_desc">Counts Shorts/Reels swipes and blocks instantly. Strongly recommended.</string>
+    <string name="perm_notifications_title">Notifications</string>
+    <string name="perm_notifications_desc">Status in the shade and nudges when the overlay is off.</string>
+    <string name="perm_battery_title">Unrestricted battery</string>
+    <string name="perm_battery_desc">Stops the system from putting the brain to sleep for good.</string>
+    <string name="disclosure_title">How Brain Rot uses Accessibility</string>
+    <string name="disclosure_body">Brain Rot uses the Android Accessibility Service API to:\n\n• detect when YouTube Shorts, Instagram Reels, TikTok or Snapchat Spotlight is on screen, and count each swipe to a new video;\n• notice which app you open, so your limits apply right away;\n• go Home or Back only when you tap a button on the block screen.\n\nIt reads only the IDs and sizes of on-screen elements, never text, messages or what you type. Nothing is stored except counts, and nothing leaves your phone (the app has no internet permission).\n\nYou can turn it off at any time in Settings → Accessibility.</string>
+    <string name="disclosure_restricted">If Android says this setting is restricted (app installed outside the Play Store): open App info → ⋮ menu → Allow restricted settings, then try again.</string>
+    <string name="disclosure_open_app_info">Open App info</string>
+    <string name="disclosure_accept">I agree, open settings</string>
+    <string name="disclosure_decline">No thanks</string>
+
+    <!-- Notifications -->
+    <string name="channel_status">Brain status</string>
+    <string name="channel_status_desc">Keeps your brain alive and shows how it is doing.</string>
+    <string name="channel_nudges">Limit nudges</string>
+    <string name="channel_nudges_desc">Heads-up when you are close to a limit.</string>
+    <string name="status_starting">Waking up…</string>
+    <string name="status_title">%1$s is %2$s</string>
+    <string name="status_text">🎬 %1$d reels · ⏱ %2$s · ❤️ %3$d%%</string>
+    <string name="nudge_title">%1$s is getting worried</string>
+    <string name="nudge_detail">%1$s: %2$d%% used</string>
+    <string name="nudge_label_app">%2$s · %1$s</string>
+
+    <!-- Widget -->
+    <string name="widget_label">Brain Rot</string>
+    <string name="widget_description">Your brain pet with today\'s reels and screen time.</string>
+    <string name="widget_brain_cd">Your brain pet</string>
+    <string name="widget_placeholder">Open Brain Rot to start</string>
+    <string name="widget_title">%1$s · %2$s</string>
+    <string name="widget_stats">🎬 %1$d · ⏱ %2$s</string>
+
+    <!-- Accessibility service -->
+    <string name="accessibility_label">Brain Rot reel counter</string>
+    <string name="accessibility_description">Counts swipes in YouTube Shorts, Instagram Reels, TikTok and Snapchat Spotlight, and applies the limits you set in Brain Rot. Reads only on-screen element IDs and sizes, never text. Nothing leaves your phone.</string>
+</resources>
