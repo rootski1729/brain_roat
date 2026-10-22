@@ -79,7 +79,7 @@ class BrainRuntime(
     private val usage: UsageReader,
     val catalog: AppCatalog,
 ) {
-    val reelCounter = com.brainrot.core.ReelCounter()
+    val reelTracker = com.brainrot.core.ReelTracker()
 
     private val _live = MutableStateFlow(LiveState())
     val live: StateFlow<LiveState> = _live.asStateFlow()
@@ -113,9 +113,9 @@ class BrainRuntime(
         val previous = _live.value.foreground
         if (previous == packageName) return
         if (previous != null && ShortVideoApps.find(previous) != null) {
-            reelCounter.onSurfaceChanged(previous, false, now)
+            reelTracker.onSurfaceChanged(previous, false, now, null)
         }
-        _live.update { it.copy(foreground = packageName, inShortVideo = packageName != null && reelCounter.isInSurface(packageName)) }
+        _live.update { it.copy(foreground = packageName, inShortVideo = packageName != null && reelTracker.isInSurface(packageName)) }
     }
 
     fun setInShortVideo(packageName: String, visible: Boolean) {
@@ -144,7 +144,7 @@ class BrainRuntime(
 
     fun onAccessibilityDisconnected() {
         accessibility = null
-        reelCounter.hideAll(System.currentTimeMillis())
+        reelTracker.hideAll(System.currentTimeMillis())
         _live.update { it.copy(accessibilityConnected = false, inShortVideo = false) }
         BrainLog.w("accessibility_disconnected")
     }

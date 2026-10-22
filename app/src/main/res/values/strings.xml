@@ -151,7 +151,7 @@
     <string name="settings_overlay">Show floating brain</string>
     <string name="settings_overlay_desc">The brain on top of other apps. Blocking works even when it\'s off.</string>
     <string name="settings_roaming">Let it wander when restless</string>
-    <string name="settings_roaming_desc">From Restless on, the brain paces the screen edges; when Fried it walks into the middle.</string>
+    <string name="settings_roaming_desc">A calm brain takes the odd stroll; from Restless on it paces the edges, and when Fried it walks into the middle of your screen.</string>
     <string name="settings_speech">Speech bubbles</string>
     <string name="settings_speech_desc">Little comments about how it feels.</string>
     <string name="settings_reels">Count reels</string>
@@ -159,6 +159,12 @@
     <string name="settings_bubble_size">Bubble size: %1$d dp</string>
     <string name="reels_off_message">You have reel limits. With counting off they stop working, so this takes the same pause as loosening a limit.</string>
     <string name="reels_off_confirm">Turn off reel counting</string>
+    <string name="settings_live_counter">Live reel counter at the top</string>
+    <string name="settings_live_counter_desc">While Shorts or Reels are open, a small pill at the top shows today\'s count and bumps on every reel.</string>
+    <plurals name="hud_text">
+        <item quantity="one">🧠 %1$d reel today · %2$s</item>
+        <item quantity="other">🧠 %1$d reels today · %2$s</item>
+    </plurals>
     <string name="settings_show_bubble_now">Show the bubble again now</string>
     <string name="settings_permissions_title">Permissions</string>
     <string name="settings_diagnostics_title">Diagnostics</string>
@@ -176,7 +182,7 @@
     <string name="diag_never">Never</string>
     <string name="diag_seconds_ago">%1$d s ago</string>
     <string name="diag_logcat_hint">Debug logs: adb logcat -s %1$s</string>
-    <string name="privacy_note">Everything stays on this phone. Brain Rot has no internet permission, reads no messages or captions, and only looks at the layout of Shorts/Reels players to count swipes.</string>
+    <string name="privacy_note">Everything stays on this phone. Brain Rot has no internet permission. Inside Shorts/Reels players it reads only the current video\'s caption and author to tell videos apart, turning them into anonymous numbers immediately; it never reads messages or what you type, and stores only counts.</string>
 
     <!-- Onboarding and permissions -->
     <string name="onboarding_brain_cd">A happy, fresh brain pet</string>
@@ -198,7 +204,15 @@
     <string name="perm_battery_title">Unrestricted battery</string>
     <string name="perm_battery_desc">Stops the system from putting the brain to sleep for good.</string>
     <string name="disclosure_title">How Brain Rot uses Accessibility</string>
-    <string name="disclosure_body">Brain Rot uses the Android Accessibility Service API to:\n\n• detect when YouTube Shorts, Instagram Reels, TikTok or Snapchat Spotlight is on screen, and count each swipe to a new video;\n• notice which app you open, so your limits apply right away;\n• go Home or Back only when you tap a button on the block screen.\n\nIt reads only the IDs and sizes of on-screen elements, never text, messages or what you type. Nothing is stored except counts, and nothing leaves your phone (the app has no internet permission).\n\nYou can turn it off at any time in Settings → Accessibility.</string>
+    <string name="disclosure_body">Brain Rot uses the Android Accessibility Service API to:
+
+• detect when YouTube Shorts, Instagram Reels, TikTok or Snapchat Spotlight is on screen and count each new video. To tell one video from the next it reads the caption and author name of the video on screen; these are turned into anonymous numbers in memory immediately and are never saved or sent;
+• notice which app you open, so your limits apply right away;
+• go Home or Back only when you tap a button on the block screen.
+
+It does not read messages, comments, or anything you type, and it does nothing outside those video players except notice which app is open. Only counts are stored, and nothing leaves your phone (the app has no internet permission).
+
+You can turn it off at any time in Settings → Accessibility.</string>
     <string name="disclosure_restricted">If the switch is grey or says \"Restricted setting\" (app installed outside the Play Store): open App info → ⋮ (top right) → Allow restricted settings, confirm with your PIN, then come back and turn it on. The ⋮ option only appears after you have tried the switch once.</string>
     <string name="a11y_steps_title">On your phone:</string>
     <string name="a11y_steps_samsung">1. In Accessibility, scroll down and tap \"Installed apps\".\n2. Tap \"Brain Rot reel counter\".\n3. Turn it On, then tap \"Allow\".</string>
@@ -237,5 +251,5 @@
 
     <!-- Accessibility service -->
     <string name="accessibility_label">Brain Rot reel counter</string>
-    <string name="accessibility_description">Counts swipes in YouTube Shorts, Instagram Reels, TikTok and Snapchat Spotlight, and applies the limits you set in Brain Rot. Reads only on-screen element IDs and sizes, never text. Nothing leaves your phone.</string>
+    <string name="accessibility_description">Counts videos in YouTube Shorts, Instagram Reels, TikTok and Snapchat Spotlight, and applies the limits you set in Brain Rot. Reads only the current video\'s caption and author inside those players, as anonymous numbers in memory. Nothing is stored except counts, and nothing leaves your phone.</string>
 </resources>

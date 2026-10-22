@@ -180,7 +180,7 @@ class BrainService : Service() {
     }
 
     private fun account(now: Long, wasScreenOn: Boolean) {
-        val shortMs = runtime.reelCounter.drainSurfaceMs(now)
+        val shortMs = runtime.reelTracker.drainSurfaceMs(now)
         val reels = runtime.drainPendingReels()
         store.update { d ->
             val elapsed = now - d.accountedUntil
@@ -244,7 +244,7 @@ class BrainService : Service() {
     private fun onScreenOff(now: Long) {
         account(now, wasScreenOn = true)
         screenOn = false
-        runtime.reelCounter.hideAll(now)
+        runtime.reelTracker.hideAll(now)
         runtime.setScreenOn(false, now)
         overlay.onScreenOff()
         updateWidget(now, force = true)

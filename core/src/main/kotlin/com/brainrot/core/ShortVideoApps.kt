@@ -19,6 +19,11 @@ data class ShortVideoApp(
     val pagerIds: List<String> = surfaceIds,
     /** The feed opens straight into the player (TikTok), so the app itself is the surface. */
     val wholeAppIsSurface: Boolean = false,
+    /**
+     * Nodes holding the current reel's author/caption/title, used to tell reels apart
+     * ([ReelFingerprints]). Empty means "use the most visible page of the pager".
+     */
+    val captionIds: List<String> = emptyList(),
 )
 
 object ShortVideoApps {
@@ -27,12 +32,14 @@ object ShortVideoApps {
         label = "YouTube Shorts",
         surfaceIds = listOf("reel_recycler", "reel_player_page_container", "reel_player_underlay"),
         pagerIds = listOf("reel_recycler"),
+        captionIds = listOf("reel_player_page_content"),
     )
     val INSTAGRAM = ShortVideoApp(
         packageNames = setOf("com.instagram.android"),
         label = "Instagram Reels",
         surfaceIds = listOf("clips_viewer_view_pager", "clips_video_container"),
         pagerIds = listOf("clips_viewer_view_pager"),
+        captionIds = listOf("clips_author_username", "clips_captions_component"),
     )
     val TIKTOK = ShortVideoApp(
         packageNames = setOf("com.zhiliaoapp.musically", "com.ss.android.ugc.trill", "com.ss.android.ugc.aweme"),

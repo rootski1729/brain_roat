@@ -50,6 +50,8 @@ data class Settings(
     val roamingEnabled: Boolean = true,
     val reelCountingEnabled: Boolean = true,
     val speechEnabled: Boolean = true,
+    /** Live "🧠 N reels" pill at the top of the screen while a Shorts/Reels player is open. */
+    val liveCounterEnabled: Boolean = true,
     val bubbleSizeDp: Int = 64,
     val onboardingDone: Boolean = false,
     /** The bubble is hidden until this time ("hide for 1 hour"). Blocking still works. */

@@ -75,6 +75,7 @@ fun SettingsScreen(
             }
             ToggleRow(R.string.settings_overlay, R.string.settings_overlay_desc, settings.overlayEnabled) { v -> edit { it.copy(overlayEnabled = v) } }
             ToggleRow(R.string.settings_roaming, R.string.settings_roaming_desc, settings.roamingEnabled) { v -> edit { it.copy(roamingEnabled = v) } }
+            ToggleRow(R.string.settings_live_counter, R.string.settings_live_counter_desc, settings.liveCounterEnabled) { v -> edit { it.copy(liveCounterEnabled = v) } }
             ToggleRow(R.string.settings_speech, R.string.settings_speech_desc, settings.speechEnabled) { v -> edit { it.copy(speechEnabled = v) } }
             ToggleRow(R.string.settings_reels, R.string.settings_reels_desc, settings.reelCountingEnabled) { v ->
                 // Without counting, reel limits stop applying: that is loosening, so it costs the same wait.

@@ -77,6 +77,11 @@
         <item>Ow. Still no.</item>
         <item>I\'m a brain, not a button.</item>
     </string-array>
+    <string-array name="speech_thrown">
+        <item>Wheeee! 🌀</item>
+        <item>I can fly!</item>
+        <item>Was that necessary?!</item>
+    </string-array>
     <string-array name="speech_rested">
         <item>That break felt amazing! 🌞</item>
         <item>Recharged! Thanks for putting me down.</item>

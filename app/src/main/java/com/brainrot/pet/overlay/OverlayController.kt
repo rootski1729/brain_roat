@@ -13,6 +13,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.hardware.display.DisplayManager
 import android.os.Build
+import android.os.SystemClock
 import android.provider.Settings
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -21,6 +22,7 @@ import android.view.Display
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.view.VelocityTracker
 import android.view.ViewConfiguration
 import android.view.WindowManager
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -93,6 +95,8 @@ class OverlayController(
     private var block: BlockScreenView? = null
     private var blockSuppressedUntil = 0L
     private var roamJob: Job? = null
+    private var throwJob: Job? = null
+    private var hud: TextView? = null
     private var moveAnimator: ValueAnimator? = null
     private var dragging = false
     private var lastAmbientAt = System.currentTimeMillis()
@@ -129,11 +133,14 @@ class OverlayController(
                 else -> 80L
             }
             it.contentDescription = res.getString(R.string.bubble_cd, d.settings.brainName, res.getString(SpeechLines.stageLabel(m.stage)))
+            it.badge = badgeText(d.today.totalReels)
         }
+        renderHud(d, l, m)
         panel?.bind(d, l, m)
         block?.let { bindBlock(it, l.breach ?: return@let, d, m) }
 
-        val shouldRoam = bubble != null && d.settings.roamingEnabled && m.stage >= Stage.RESTLESS
+        // Calm brains take an occasional stroll; restless ones pace; fried ones get in the way.
+        val shouldRoam = bubble != null && d.settings.roamingEnabled
         if (shouldRoam && roamJob == null) startRoaming() else if (!shouldRoam) stopRoaming()
 
         // Calm brains chat every ~6 minutes, frazzled ones every ~2.
@@ -149,6 +156,9 @@ class OverlayController(
         when (event) {
             is BrainEvent.ReelCounted -> {
                 bubble?.react(Reaction.FLINCH)
+                bubble?.badge = badgeText(event.totalToday)
+                bubble?.bumpBadge()
+                hud?.let { bump(it) }
                 if (settings.speechEnabled && event.totalToday > 0 && event.totalToday % REEL_MILESTONE == 0) {
                     showSpeech(res.getQuantityString(R.plurals.speech_reel_milestone, event.totalToday, event.totalToday))
                 }
@@ -166,12 +176,15 @@ class OverlayController(
     }
 
     fun onScreenOff() {
+        throwJob?.cancel()
+        removeHud()
         moveAnimator?.cancel()
         hidePanel()
         hideSpeech()
     }
 
     fun destroy() {
+        removeHud()
         stopRoaming()
         removeBubble()
         hideBlock()
@@ -250,7 +263,10 @@ class OverlayController(
         val view = BrainView(ctx)
         view.setOnTouchListener(BubbleTouch())
         // Taps (and TalkBack double-taps) arrive as clicks; the touch listener only handles drags.
-        view.setOnClickListener { togglePanel() }
+        view.setOnClickListener {
+            view.react(Reaction.HAPPY)
+            togglePanel()
+        }
         view.setOnLongClickListener {
             runtime.openApp()
             true
@@ -276,6 +292,8 @@ class OverlayController(
     }
 
     private fun removeBubble() {
+        throwJob?.cancel()
+        throwJob = null
         stopRoaming()
         moveAnimator?.cancel()
         hidePanel()
@@ -299,6 +317,7 @@ class OverlayController(
         private var startY = 0
         private var moved = false
         private var longPressed = false
+        private var velocity: VelocityTracker? = null
         private val longPress = Runnable {
             if (!moved) {
                 longPressed = true
@@ -309,9 +328,19 @@ class OverlayController(
         override fun onTouch(v: View, e: MotionEvent): Boolean {
             val p = bubbleParams ?: return false
             val brain = bubble ?: return false
+            // The window moves with the finger, so track velocity in screen coordinates.
+            velocity?.let { tracker ->
+                val screenEvent = MotionEvent.obtain(e)
+                screenEvent.setLocation(e.rawX, e.rawY)
+                tracker.addMovement(screenEvent)
+                screenEvent.recycle()
+            }
             when (e.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
                     moveAnimator?.cancel()
+                    throwJob?.cancel()
+                    velocity?.recycle()
+                    velocity = VelocityTracker.obtain()
                     downX = e.rawX
                     downY = e.rawY
                     startX = p.x
@@ -342,9 +371,15 @@ class OverlayController(
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     v.removeCallbacks(longPress)
                     dragging = false
+                    val tracker = velocity
+                    velocity = null
+                    tracker?.computeCurrentVelocity(1000)
+                    val vx = tracker?.xVelocity ?: 0f
+                    val vy = tracker?.yVelocity ?: 0f
+                    tracker?.recycle()
                     if (moved) {
                         brain.clearReaction()
-                        snapToEdge()
+                        if (e.actionMasked == MotionEvent.ACTION_UP && hypot(vx, vy) > dp(FLING_MIN_DP)) throwBubble(vx, vy) else snapToEdge()
                     } else if (!longPressed && e.actionMasked == MotionEvent.ACTION_UP) {
                         v.performClick()
                     }
@@ -377,8 +412,9 @@ class OverlayController(
     private fun startRoaming() {
         roamJob = scope.launch {
             while (isActive) {
-                val restlessness = mood?.restlessness ?: 0.0
-                delay((40_000 - 32_000 * restlessness).toLong() + Random.nextLong(0, 6_000))
+                val m0 = mood
+                val calm = m0 == null || m0.stage < Stage.RESTLESS
+                delay(if (calm) 70_000 + Random.nextLong(0, 50_000) else (40_000 - 32_000 * m0!!.restlessness).toLong() + Random.nextLong(0, 6_000))
                 val m = mood ?: continue
                 if (dragging || panel != null || bubble == null) continue
                 roamOnce(m)
@@ -398,7 +434,11 @@ class OverlayController(
         val (minY, maxY) = yRange(screen, bubbleSizePx)
         val duration = (2_600 - 1_600 * m.restlessness).toLong()
         hideSpeech()
-        if (m.stage >= Stage.FRIED && Random.nextFloat() < 0.6f) {
+        if (m.stage < Stage.RESTLESS) {
+            // A calm stroll: a short walk up or down its own edge.
+            val step = (screen.y * (0.08f + Random.nextFloat() * 0.15f)).roundToInt() * (if (Random.nextBoolean()) 1 else -1)
+            animateTo(p.x, (p.y + step).coerceIn(minY, maxY), 2_200, walk = true)
+        } else if (m.stage >= Stage.FRIED && Random.nextFloat() < 0.6f) {
             // Fried brains wander into the middle of the screen, linger in the way, then wander back.
             val ty = Random.nextInt(minY, maxY + 1)
             animateTo(Random.nextInt(maxX / 4, maxX * 3 / 4 + 1), ty, duration, walk = true)
@@ -442,6 +482,121 @@ class OverlayController(
             moveAnimator = anim
             cont.invokeOnCancellation { anim.cancel() }
             anim.start()
+        }
+    }
+
+    // --- Throwing: fling the brain and it bounces off the screen edges --------------------------
+
+    private fun throwBubble(vx0: Float, vy0: Float) {
+        val view = bubble ?: return
+        val p = bubbleParams ?: return
+        moveAnimator?.cancel()
+        throwJob?.cancel()
+        if (data?.settings?.speechEnabled == true && Random.nextFloat() < 0.5f) {
+            showSpeech(res.getStringArray(R.array.speech_thrown).random())
+            hideSpeechSoon()
+        }
+        throwJob = scope.launch {
+            val cap = dp(4_000).toFloat()
+            var vx = vx0.coerceIn(-cap, cap)
+            var vy = vy0.coerceIn(-cap, cap)
+            var x = p.x.toFloat()
+            var y = p.y.toFloat()
+            val screen = screenSize()
+            val maxX = (screen.x - bubbleSizePx).toFloat()
+            val (minY, maxYInt) = yRange(screen, bubbleSizePx)
+            val maxY = maxYInt.toFloat()
+            val stopSpeed = dp(140).toFloat()
+            var last = SystemClock.uptimeMillis()
+            view.walking = false
+            while (isActive && hypot(vx, vy) > stopSpeed && bubble === view) {
+                delay(16)
+                val now = SystemClock.uptimeMillis()
+                val dt = ((now - last) / 1000f).coerceIn(0.001f, 0.05f)
+                last = now
+                x += vx * dt
+                y += vy * dt
+                // Air friction: loses ~80% of its speed per second.
+                val drag = Math.pow(0.2, dt.toDouble()).toFloat()
+                vx *= drag
+                vy *= drag
+                if (x < 0f || x > maxX) { x = x.coerceIn(0f, maxX); vx = -vx * 0.65f; view.react(Reaction.FLINCH) }
+                if (y < minY || y > maxY) { y = y.coerceIn(minY.toFloat(), maxY); vy = -vy * 0.65f; view.react(Reaction.FLINCH) }
+                p.x = x.roundToInt()
+                p.y = y.roundToInt()
+                updateWindow(view, p)
+            }
+            if (bubble === view) snapToEdge()
+        }
+    }
+
+    // --- Live counter pill at the top while a Shorts/Reels player is open ----------------------
+
+    private fun renderHud(d: AppData, l: LiveState, m: BrainMood) {
+        val want = l.screenOn && l.inShortVideo && d.settings.liveCounterEnabled && block == null && canDraw()
+        if (!want) {
+            removeHud()
+            return
+        }
+        val view = hud ?: createHud() ?: return
+        val reels = d.today.totalReels
+        view.text = res.getQuantityString(R.plurals.hud_text, reels, reels, res.getString(SpeechLines.stageLabel(m.stage)))
+        (view.background as? GradientDrawable)?.setColor(hudColor(m.stage))
+    }
+
+    private fun createHud(): TextView? {
+        val view = TextView(ctx).apply {
+            setTextColor(0xFFFFFFFF.toInt())
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+            setTypeface(typeface, Typeface.BOLD)
+            background = rounded(hudColor(Stage.FRESH), 20)
+            setPadding(dp(14), dp(6), dp(14), dp(6))
+        }
+        val params = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+            PixelFormat.TRANSLUCENT,
+        ).apply {
+            gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+            y = dp(40)
+            // Touches pass through to the app below; Android 12+ allows that only at alpha <= 0.8.
+            alpha = 0.8f
+        }
+        if (!addWindow(view, params)) return null
+        hud = view
+        return view
+    }
+
+    private fun removeHud() {
+        hud?.let { removeWindow(it) }
+        hud = null
+    }
+
+    private fun bump(view: View) {
+        view.animate().cancel()
+        view.scaleX = 1.25f
+        view.scaleY = 1.25f
+        view.animate().scaleX(1f).scaleY(1f).setDuration(220).start()
+    }
+
+    private fun hudColor(stage: Stage): Int = when (stage) {
+        Stage.FRESH -> 0xFF2E7D5B.toInt()
+        Stage.FOGGY -> 0xFF5B6B7A.toInt()
+        Stage.RESTLESS -> 0xFFB7791F.toInt()
+        Stage.FRIED -> 0xFFC2410C.toInt()
+        Stage.ROTTEN -> 0xFF9F1239.toInt()
+    }
+
+    private fun badgeText(reels: Int): String = if (reels > 999) "999+" else reels.toString()
+
+    private fun hideSpeechSoon() {
+        speechHideJob?.cancel()
+        speechHideJob = scope.launch {
+            delay(1_500)
+            hideSpeech()
         }
     }
 
@@ -695,6 +850,7 @@ class OverlayController(
         private const val SPEECH_MS = 4_500L
         private const val BLOCK_SUPPRESS_MS = 1_500L
         private const val REEL_MILESTONE = 10
+        private const val FLING_MIN_DP = 900
         private const val WRAP = LinearLayout.LayoutParams.WRAP_CONTENT
         private val INK = 0xFF2B1B2E.toInt()
     }
