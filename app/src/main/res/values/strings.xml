@@ -199,7 +199,15 @@
     <string name="perm_battery_desc">Stops the system from putting the brain to sleep for good.</string>
     <string name="disclosure_title">How Brain Rot uses Accessibility</string>
     <string name="disclosure_body">Brain Rot uses the Android Accessibility Service API to:\n\n• detect when YouTube Shorts, Instagram Reels, TikTok or Snapchat Spotlight is on screen, and count each swipe to a new video;\n• notice which app you open, so your limits apply right away;\n• go Home or Back only when you tap a button on the block screen.\n\nIt reads only the IDs and sizes of on-screen elements, never text, messages or what you type. Nothing is stored except counts, and nothing leaves your phone (the app has no internet permission).\n\nYou can turn it off at any time in Settings → Accessibility.</string>
-    <string name="disclosure_restricted">If Android says this setting is restricted (app installed outside the Play Store): open App info → ⋮ menu → Allow restricted settings, then try again.</string>
+    <string name="disclosure_restricted">If the switch is grey or says \"Restricted setting\" (app installed outside the Play Store): open App info → ⋮ (top right) → Allow restricted settings, confirm with your PIN, then come back and turn it on. The ⋮ option only appears after you have tried the switch once.</string>
+    <string name="a11y_steps_title">On your phone:</string>
+    <string name="a11y_steps_samsung">1. In Accessibility, scroll down and tap \"Installed apps\".\n2. Tap \"Brain Rot reel counter\".\n3. Turn it On, then tap \"Allow\".</string>
+    <string name="a11y_steps_coloros">1. In Accessibility, tap \"Downloaded apps\" (on some versions \"Installed services\").\n2. Tap \"Brain Rot reel counter\".\n3. Turn it On and confirm (wait for the timer if one is shown).</string>
+    <string name="a11y_steps_xiaomi">1. In Accessibility, tap \"Downloaded apps\".\n2. Tap \"Brain Rot reel counter\".\n3. Turn it On and confirm (wait for the timer if one is shown).</string>
+    <string name="a11y_steps_vivo">1. In Accessibility, tap \"Downloaded services\" or \"Installed services\".\n2. Tap \"Brain Rot reel counter\".\n3. Turn it On and confirm.</string>
+    <string name="a11y_steps_generic">1. In Accessibility, open \"Downloaded apps\", \"Installed apps\" or \"Installed services\".\n2. Tap \"Brain Rot reel counter\".\n3. Turn it On and confirm.</string>
+    <string name="a11y_help_title">Reel counting is still off</string>
+    <string name="a11y_help_restricted">Switch grey or \"Restricted setting\"? Tap the button below → ⋮ (top right) → Allow restricted settings → confirm with your PIN. Then tap Grant on Reel counting again.</string>
     <string name="disclosure_open_app_info">Open App info</string>
     <string name="disclosure_accept">I agree, open settings</string>
     <string name="disclosure_decline">No thanks</string>

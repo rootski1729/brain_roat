@@ -7,10 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Bundle
 import android.os.Build
 import android.os.PowerManager
 import android.os.Process
 import android.provider.Settings
+import androidx.annotation.StringRes
+import com.brainrot.pet.R
 import com.brainrot.pet.service.ReelAccessibilityService
 
 data class PermissionState(
@@ -66,7 +69,40 @@ object Permissions {
     fun overlayIntent(context: Context): Intent =
         Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
 
-    fun accessibilityIntent(): Intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+    /**
+     * Opens Brain Rot's own switch where the system supports it (Android 11+), otherwise the
+     * Accessibility list with our entry highlighted (supported by Pixel/AOSP and many OEM builds).
+     * Callers fall back to [accessibilityListIntent] if this one cannot be started.
+     */
+    fun accessibilityIntent(context: Context): Intent {
+        val component = ComponentName(context, ReelAccessibilityService::class.java).flattenToString()
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Intent(Settings.ACTION_ACCESSIBILITY_DETAILS_SETTINGS).putExtra(Intent.EXTRA_COMPONENT_NAME, component)
+        } else {
+            accessibilityListIntent(context)
+        }
+    }
+
+    fun accessibilityListIntent(context: Context): Intent {
+        val component = ComponentName(context, ReelAccessibilityService::class.java).flattenToString()
+        return Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+            .putExtra(EXTRA_FRAGMENT_ARG_KEY, component)
+            .putExtra(EXTRA_SHOW_FRAGMENT_ARGUMENTS, Bundle().apply { putString(EXTRA_FRAGMENT_ARG_KEY, component) })
+    }
+
+    /** Where this brand hides third-party accessibility services, as a string resource. */
+    @StringRes
+    fun accessibilitySteps(manufacturer: String = Build.MANUFACTURER): Int = when (manufacturer.lowercase()) {
+        "samsung" -> R.string.a11y_steps_samsung
+        "oppo", "realme", "oneplus" -> R.string.a11y_steps_coloros
+        "xiaomi", "redmi", "poco" -> R.string.a11y_steps_xiaomi
+        "vivo", "iqoo" -> R.string.a11y_steps_vivo
+        else -> R.string.a11y_steps_generic
+    }
+
+    // Settings' own (unofficial but long-stable) extras for highlighting one preference.
+    private const val EXTRA_FRAGMENT_ARG_KEY = ":settings:fragment_args_key"
+    private const val EXTRA_SHOW_FRAGMENT_ARGUMENTS = ":settings:show_fragment_args"
 
     /** App info: where "Allow restricted settings" lives for sideloaded installs (Android 13+). */
     fun appDetailsIntent(context: Context): Intent =

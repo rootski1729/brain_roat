@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -87,6 +88,8 @@ fun OnboardingScreen(permissions: PermissionState, onPermissionsChanged: () -> U
 fun PermissionSteps(permissions: PermissionState, onPermissionsChanged: () -> Unit) {
     val context = LocalContext.current
     var showDisclosure by remember { mutableStateOf(false) }
+    // Set once the user went to Accessibility settings; if it is still off afterwards, show help.
+    var triedAccessibility by rememberSaveable { mutableStateOf(false) }
     val notificationLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { onPermissionsChanged() }
 
     PermissionRow(R.string.perm_usage_title, R.string.perm_usage_desc, permissions.usageAccess, required = true) {
@@ -97,6 +100,9 @@ fun PermissionSteps(permissions: PermissionState, onPermissionsChanged: () -> Un
     }
     PermissionRow(R.string.perm_accessibility_title, R.string.perm_accessibility_desc, permissions.accessibility, required = false) {
         showDisclosure = true
+    }
+    if (triedAccessibility && !permissions.accessibility) {
+        AccessibilityHelpCard(onOpenAppInfo = { open(context, Permissions.appDetailsIntent(context)) })
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         PermissionRow(R.string.perm_notifications_title, R.string.perm_notifications_desc, permissions.notifications, required = false) {
@@ -111,7 +117,8 @@ fun PermissionSteps(permissions: PermissionState, onPermissionsChanged: () -> Un
         AccessibilityDisclosure(
             onAccept = {
                 showDisclosure = false
-                open(context, Permissions.accessibilityIntent())
+                triedAccessibility = true
+                openAccessibility(context)
             },
             onDecline = { showDisclosure = false },
             onRestrictedHelp = { open(context, Permissions.appDetailsIntent(context)) },
@@ -151,6 +158,8 @@ private fun AccessibilityDisclosure(onAccept: () -> Unit, onDecline: () -> Unit,
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(stringResource(R.string.disclosure_body))
+                Text(stringResource(R.string.a11y_steps_title), style = MaterialTheme.typography.titleSmall)
+                Text(stringResource(Permissions.accessibilitySteps()), style = MaterialTheme.typography.bodyMedium)
                 Text(stringResource(R.string.disclosure_restricted), style = MaterialTheme.typography.bodySmall)
                 TextButton(onClick = onRestrictedHelp) { Text(stringResource(R.string.disclosure_open_app_info)) }
             }
@@ -158,6 +167,26 @@ private fun AccessibilityDisclosure(onAccept: () -> Unit, onDecline: () -> Unit,
         confirmButton = { TextButton(onClick = onAccept) { Text(stringResource(R.string.disclosure_accept)) } },
         dismissButton = { TextButton(onClick = onDecline) { Text(stringResource(R.string.disclosure_decline)) } },
     )
+}
+
+/** Shown when the user came back from Accessibility settings and the service is still off. */
+@Composable
+private fun AccessibilityHelpCard(onOpenAppInfo: () -> Unit) {
+    SectionCard(container = MaterialTheme.colorScheme.tertiaryContainer) {
+        Text(stringResource(R.string.a11y_help_title), style = MaterialTheme.typography.titleSmall)
+        Text(stringResource(Permissions.accessibilitySteps()), style = MaterialTheme.typography.bodyMedium)
+        Text(stringResource(R.string.a11y_help_restricted), style = MaterialTheme.typography.bodyMedium)
+        FilledTonalButton(onClick = onOpenAppInfo) { Text(stringResource(R.string.disclosure_open_app_info)) }
+    }
+}
+
+private fun openAccessibility(context: Context) {
+    try {
+        context.startActivity(Permissions.accessibilityIntent(context))
+    } catch (e: RuntimeException) {
+        BrainLog.w("a11y_details_intent_failed", e)
+        open(context, Permissions.accessibilityListIntent(context))
+    }
 }
 
 private fun open(context: Context, intent: Intent) {

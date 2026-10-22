@@ -10,3 +10,4 @@ captures/
 *.jks
 keystore.properties
 dist/
+keys/

@@ -20,11 +20,17 @@ android {
         applicationId = "com.brainrot.pet"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
     }
 
     signingConfigs {
+        // A stable debug key (git-ignored, standard debug passwords) so every debug APK, built on any
+        // machine, installs over the previous one. Without it each build host signs differently.
+        val sharedDebugKey = rootProject.file("keys/debug.keystore")
+        if (sharedDebugKey.exists()) {
+            getByName("debug") { storeFile = sharedDebugKey }
+        }
         if (keystoreProps.isNotEmpty()) {
             create("release") {
                 storeFile = rootProject.file(keystoreProps.getProperty("storeFile"))
