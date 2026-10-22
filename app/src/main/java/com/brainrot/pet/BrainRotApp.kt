@@ -1,5 +1,6 @@
 package com.brainrot.pet
 
+import android.annotation.SuppressLint
 import android.app.Application
 import com.brainrot.pet.data.AppCatalog
 import com.brainrot.pet.data.BrainStore
@@ -22,6 +23,7 @@ class BrainRotApp : Application() {
  * Process-wide singletons. The activity, the foreground service, the accessibility service and the
  * widget all run in this one process and share this state.
  */
+@SuppressLint("StaticFieldLeak") // Holds only the Application context, which lives as long as the process.
 object AppGraph {
     lateinit var store: BrainStore
         private set

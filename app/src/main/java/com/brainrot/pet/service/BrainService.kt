@@ -326,7 +326,7 @@ class BrainService : Service() {
         val l = runtime.live.value
         val mood = BrainEngine.mood(d.brain, System.currentTimeMillis() - l.sessionStartedAt)
         val title = getString(R.string.status_title, d.settings.brainName, getString(SpeechLines.stageLabel(mood.stage)))
-        val text = getString(R.string.status_text, d.today.totalReels, formatDuration(l.totalScreenMs), mood.health)
+        val text = resources.getQuantityString(R.plurals.status_text, d.today.totalReels, d.today.totalReels, formatDuration(l.totalScreenMs), mood.health)
         val key = "$title|$text"
         if (key == lastStatus) return
         lastStatus = key

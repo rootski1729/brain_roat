@@ -45,6 +45,7 @@ class ReelAccessibilityService : AccessibilityService() {
                 }
                 AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> checkSurface(pkg, now, force = false)
                 AccessibilityEvent.TYPE_VIEW_SCROLLED -> onScroll(e, pkg, now)
+                else -> Unit // Only the three types in accessibility_service_config.xml are subscribed.
             }
         } catch (ex: RuntimeException) {
             // Another app's node tree can vanish mid-read. Never crash; log at most once a minute.

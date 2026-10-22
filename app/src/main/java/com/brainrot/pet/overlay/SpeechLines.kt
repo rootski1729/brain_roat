@@ -54,8 +54,8 @@ object SpeechLines {
         val app = breach.packageName?.let { AppGraph.catalog.label(it) } ?: ""
         return when (breach.kind) {
             BreachKind.APP_TIME -> context.getString(R.string.block_reason_app_time, app, formatDuration(breach.used), formatDuration(breach.limit))
-            BreachKind.APP_REELS -> context.getString(R.string.block_reason_app_reels, breach.used.toInt(), app, breach.limit.toInt())
-            BreachKind.TOTAL_REELS -> context.getString(R.string.block_reason_total_reels, breach.used.toInt(), breach.limit.toInt())
+            BreachKind.APP_REELS -> context.resources.getQuantityString(R.plurals.block_reason_app_reels, breach.used.toInt(), breach.used.toInt(), app, breach.limit.toInt())
+            BreachKind.TOTAL_REELS -> context.resources.getQuantityString(R.plurals.block_reason_total_reels, breach.used.toInt(), breach.used.toInt(), breach.limit.toInt())
             BreachKind.TOTAL_SCREEN_TIME -> context.getString(R.string.block_reason_total_screen, formatDuration(breach.used), formatDuration(breach.limit))
         }
     }

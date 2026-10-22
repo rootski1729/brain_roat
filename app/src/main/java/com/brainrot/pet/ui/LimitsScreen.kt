@@ -29,7 +29,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -233,8 +232,9 @@ private fun AppLimitEditor(draft: AppLimitDraft, onRemove: () -> Unit) {
 
 @Composable
 fun AppIcon(packageName: String, sizeDp: Int = 32) {
-    val icon by produceState<ImageBitmap?>(null, packageName) {
-        value = withContext(Dispatchers.Default) {
+    var icon by remember(packageName) { mutableStateOf<ImageBitmap?>(null) }
+    LaunchedEffect(packageName) {
+        icon = withContext(Dispatchers.Default) {
             AppGraph.catalog.icon(packageName)?.toBitmap(96, 96)?.asImageBitmap()
         }
     }

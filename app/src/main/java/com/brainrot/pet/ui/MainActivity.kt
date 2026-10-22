@@ -124,7 +124,11 @@ private fun AppRoot() {
             title = stringResource(R.string.unlock_title),
             message = stringResource(R.string.unlock_message, describeBreach(breach), data.today.unlocks),
             waitSeconds = wait,
-            confirmLabel = stringResource(if (breach.isReels) R.string.unlock_confirm_reels else R.string.unlock_confirm_minutes, if (breach.isReels) UnlockPolicy.EXTRA_REELS else UnlockPolicy.EXTRA_MINUTES),
+            confirmLabel = if (breach.isReels) {
+                context.resources.getQuantityString(R.plurals.unlock_confirm_reels, UnlockPolicy.EXTRA_REELS, UnlockPolicy.EXTRA_REELS)
+            } else {
+                context.resources.getQuantityString(R.plurals.unlock_confirm_minutes, UnlockPolicy.EXTRA_MINUTES, UnlockPolicy.EXTRA_MINUTES)
+            },
             onConfirm = { runtime.unlock(breach) },
             onDismiss = { runtime.clearUnlockRequest() },
         )

@@ -39,6 +39,9 @@ class BrainView @JvmOverloads constructor(
         reaction = Reaction.NONE
     }
 
+    // The overlay drives taps through a touch listener that calls performClick (accessibility).
+    override fun performClick(): Boolean = super.performClick()
+
     override fun onVisibilityAggregated(isVisible: Boolean) {
         super.onVisibilityAggregated(isVisible)
         visibleToUser = isVisible

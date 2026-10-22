@@ -36,8 +36,14 @@
     <!-- Overlay -->
     <string name="bubble_cd">%1$s the brain, %2$s. Tap for care, drag to move, long-press to open the app.</string>
     <string name="panel_subtitle">%1$s · health %2$d%%</string>
-    <string name="panel_stats">🎬 %1$d reels · ⏱ %2$s today</string>
-    <string name="speech_reel_milestone">That\'s %1$d reels today. My neurons are buffering… 😵‍💫</string>
+    <plurals name="panel_stats">
+        <item quantity="one">🎬 %1$d reel · ⏱ %2$s today</item>
+        <item quantity="other">🎬 %1$d reels · ⏱ %2$s today</item>
+    </plurals>
+    <plurals name="speech_reel_milestone">
+        <item quantity="one">That\'s %1$d reel today.</item>
+        <item quantity="other">That\'s %1$d reels today. My neurons are buffering… 😵‍💫</item>
+    </plurals>
 
     <!-- Block screen -->
     <string name="block_title">🧠 %1$s says: not now.</string>
@@ -46,8 +52,14 @@
     <string name="block_leave_shorts">Leave Shorts / Reels</string>
     <string name="block_unlock">Unlock in Brain Rot…</string>
     <string name="block_reason_app_time">You\'ve used %1$s for %2$s today. Your limit is %3$s.</string>
-    <string name="block_reason_app_reels">%1$d reels in %2$s today. Your limit was %3$d.</string>
-    <string name="block_reason_total_reels">%1$d reels today across all apps. Your limit was %2$d.</string>
+    <plurals name="block_reason_app_reels">
+        <item quantity="one">%1$d reel in %2$s today. Your limit was %3$d.</item>
+        <item quantity="other">%1$d reels in %2$s today. Your limit was %3$d.</item>
+    </plurals>
+    <plurals name="block_reason_total_reels">
+        <item quantity="one">%1$d reel today across all apps. Your limit was %2$d.</item>
+        <item quantity="other">%1$d reels today across all apps. Your limit was %2$d.</item>
+    </plurals>
     <string name="block_reason_total_screen">%1$s on your phone today. Your limit is %2$s.</string>
 
     <!-- Limit kinds and amounts -->
@@ -61,8 +73,14 @@
     <!-- Unlock / mindful wait -->
     <string name="unlock_title">Unlock a little more?</string>
     <string name="unlock_message">%1$s\n\nUnlocks today: %2$d. Each one makes the next wait longer.</string>
-    <string name="unlock_confirm_minutes">Give me %1$d more minutes</string>
-    <string name="unlock_confirm_reels">Give me %1$d more reels</string>
+    <plurals name="unlock_confirm_minutes">
+        <item quantity="one">Give me %1$d more minute</item>
+        <item quantity="other">Give me %1$d more minutes</item>
+    </plurals>
+    <plurals name="unlock_confirm_reels">
+        <item quantity="one">Give me %1$d more reel</item>
+        <item quantity="other">Give me %1$d more reels</item>
+    </plurals>
     <string name="unlock_button">Unlock…</string>
     <string name="wait_breathe_in">Breathe in…</string>
     <string name="wait_breathe_out">Breathe out…</string>
@@ -122,7 +140,10 @@
     <string name="stats_average">Average on active days: %1$s</string>
     <string name="stats_apps_title">Top apps today</string>
     <string name="stats_apps_empty">No usage data yet. Grant usage access to see it.</string>
-    <string name="stats_app_reels">%1$d reels</string>
+    <plurals name="stats_app_reels">
+        <item quantity="one">%1$d reel</item>
+        <item quantity="other">%1$d reels</item>
+    </plurals>
     <string name="stats_care_title">Care today</string>
 
     <!-- Settings -->
@@ -190,7 +211,10 @@
     <string name="channel_nudges_desc">Heads-up when you are close to a limit.</string>
     <string name="status_starting">Waking up…</string>
     <string name="status_title">%1$s is %2$s</string>
-    <string name="status_text">🎬 %1$d reels · ⏱ %2$s · ❤️ %3$d%%</string>
+    <plurals name="status_text">
+        <item quantity="one">🎬 %1$d reel · ⏱ %2$s · ❤️ %3$d%%</item>
+        <item quantity="other">🎬 %1$d reels · ⏱ %2$s · ❤️ %3$d%%</item>
+    </plurals>
     <string name="nudge_title">%1$s is getting worried</string>
     <string name="nudge_detail">%1$s: %2$d%% used</string>
     <string name="nudge_label_app">%2$s · %1$s</string>

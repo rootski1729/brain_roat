@@ -19,6 +19,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -37,6 +38,7 @@ private const val CHART_DAYS = 14
 
 @Composable
 fun StatsScreen(data: AppData, live: LiveState, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
     val days = lastDays(data, live)
     val reels = days.map { it.totalReels.toFloat() }
     val minutes = days.map { (it.screenMs / MINUTE_MS).toFloat() }
@@ -65,7 +67,7 @@ fun StatsScreen(data: AppData, live: LiveState, modifier: Modifier = Modifier) {
                     AppIcon(pkg, 28)
                     Text(AppGraph.catalog.label(pkg), Modifier.weight(1f).padding(start = 10.dp))
                     val appReels = data.today.reelsByApp[pkg] ?: 0
-                    if (appReels > 0) Text(stringResource(R.string.stats_app_reels, appReels), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(end = 8.dp))
+                    if (appReels > 0) Text(context.resources.getQuantityString(R.plurals.stats_app_reels, appReels, appReels), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(end = 8.dp))
                     Text(formatDuration(ms), style = MaterialTheme.typography.labelLarge)
                 }
             }

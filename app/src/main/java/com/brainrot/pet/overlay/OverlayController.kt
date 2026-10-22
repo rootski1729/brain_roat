@@ -150,7 +150,7 @@ class OverlayController(
             is BrainEvent.ReelCounted -> {
                 bubble?.react(Reaction.FLINCH)
                 if (settings.speechEnabled && event.totalToday > 0 && event.totalToday % REEL_MILESTONE == 0) {
-                    showSpeech(res.getString(R.string.speech_reel_milestone, event.totalToday))
+                    showSpeech(res.getQuantityString(R.plurals.speech_reel_milestone, event.totalToday, event.totalToday))
                 }
             }
             is BrainEvent.Say -> {
@@ -532,7 +532,7 @@ class OverlayController(
             food.set(d.brain.nourishment)
             water.set(d.brain.hydration)
             energy.set(d.brain.energy)
-            stats.text = res.getString(R.string.panel_stats, d.today.totalReels, formatDuration(l.totalScreenMs))
+            stats.text = res.getQuantityString(R.plurals.panel_stats, d.today.totalReels, d.today.totalReels, formatDuration(l.totalScreenMs))
         }
 
         private fun row(vararg buttons: Button) = LinearLayout(ctx).apply {
