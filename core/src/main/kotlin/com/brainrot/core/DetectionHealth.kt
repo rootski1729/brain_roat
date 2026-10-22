@@ -8,6 +8,7 @@ object DetectionHealth {
     /** YouTube is also used for long videos, so it needs more unexplained time before we warn. */
     private val suspectAfterMs = mapOf(
         ShortVideoApps.YOUTUBE to 60 * MINUTE_MS,
+        ShortVideoApps.FACEBOOK to 60 * MINUTE_MS,
     )
     private const val DEFAULT_SUSPECT_MS = 20 * MINUTE_MS
 

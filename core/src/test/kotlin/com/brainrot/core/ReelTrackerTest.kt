@@ -93,3 +93,36 @@ class ReelTrackerTest {
         assertFalse(r.anySurfaceVisible())
     }
 }
+
+class RailDetectorTest {
+    private val w = 1080
+    private val h = 2400
+
+    private fun reelScreen(author: String, caption: String) = listOf(
+        NodeSnap(0, 0, w, h, description = "Video player, $caption", className = "android.view.ViewGroup"),
+        NodeSnap(960, 1300, 1060, 1400, description = "Like", className = "android.widget.Button"),
+        NodeSnap(960, 1450, 1060, 1550, description = "Comment", className = "android.widget.Button"),
+        NodeSnap(960, 1600, 1060, 1700, description = "Share", className = "android.widget.Button"),
+        NodeSnap(40, 1900, 400, 1960, text = author, description = author, className = "android.widget.Button"),
+        NodeSnap(0, 1980, w, 2100, description = caption, className = "android.view.ViewGroup"),
+    )
+
+    @Test
+    fun `detects a facebook style reel and fingerprints author plus caption`() {
+        val a = RailDetector.detect(reelScreen("Chef Ana", "Crispy garlic noodles in ten minutes flat"), w, h)
+        val b = RailDetector.detect(reelScreen("Runner Joe", "Morning run along the river in heavy rain"), w, h)
+        assertTrue(a.isReel)
+        assertTrue(a.tokens!!.size >= 2)
+        assertTrue(ReelFingerprints.similarity(a.tokens!!, b.tokens!!) < 0.3)
+    }
+
+    @Test
+    fun `feed without action rail or without full screen video is not a reel`() {
+        val feed = reelScreen("Chef Ana", "Crispy garlic noodles in ten minutes flat")
+            .map { if (it.centerX > 900) it.copy(left = 40, right = 140) else it }
+        assertFalse(RailDetector.detect(feed, w, h).isReel)
+        val noVideo = reelScreen("A", "Some caption that is long enough here").drop(1)
+        assertFalse(RailDetector.detect(noVideo, w, h).isReel)
+        assertFalse(RailDetector.detect(emptyList(), 0, 0).isReel)
+    }
+}

@@ -5,9 +5,13 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Rect
+import android.os.Handler
+import android.os.Looper
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.accessibility.AccessibilityWindowInfo
+import com.brainrot.core.NodeSnap
+import com.brainrot.core.RailDetector
 import com.brainrot.core.ReelFingerprints
 import com.brainrot.core.ShortVideoApp
 import com.brainrot.core.ShortVideoApps
@@ -26,6 +30,8 @@ class ReelAccessibilityService : AccessibilityService() {
     private val activityCache = HashMap<String, Boolean>()
     private val lastSurfaceCheckAt = HashMap<String, Long>()
     private val bounds = Rect()
+    private val handler = Handler(Looper.getMainLooper())
+    private val pendingCheck = HashSet<String>()
     private var lastErrorLogAt = 0L
 
     override fun onServiceConnected() {
@@ -61,6 +67,8 @@ class ReelAccessibilityService : AccessibilityService() {
     override fun onInterrupt() = Unit
 
     override fun onUnbind(intent: Intent?): Boolean {
+        handler.removeCallbacksAndMessages(null)
+        pendingCheck.clear()
         runtime.onAccessibilityDisconnected()
         return super.onUnbind(intent)
     }
@@ -107,13 +115,23 @@ class ReelAccessibilityService : AccessibilityService() {
             }
             return
         }
-        if (!force && now - (lastSurfaceCheckAt[pkg] ?: 0L) < SURFACE_CHECK_MS) return
+        val sinceLast = now - (lastSurfaceCheckAt[pkg] ?: 0L)
+        if (!force && sinceLast < SURFACE_CHECK_MS) {
+            // Throttled, but never drop the last change: re-check once when the window ends,
+            // otherwise a reel that loads after the final event of a burst would be missed.
+            if (pendingCheck.add(pkg)) {
+                handler.postDelayed({
+                    pendingCheck.remove(pkg)
+                    checkSurface(pkg, System.currentTimeMillis(), force = false)
+                }, SURFACE_CHECK_MS - sinceLast)
+            }
+            return
+        }
         lastSurfaceCheckAt[pkg] = now
         // Our block screen or another app may be the active window; only judge the app itself.
         val root = rootInActiveWindow ?: return
         if (root.packageName?.toString() != pkg) return
-        val visible = app.wholeAppIsSurface || hasFullScreenSurface(root, pkg, app)
-        val tokens = if (visible) currentReelTokens(root, pkg, app) else null
+        val (visible, tokens) = inspect(root, pkg, app)
         val counted = if (visible && tracker.isInSurface(pkg)) {
             tracker.onContentChanged(pkg, now, tokens)
         } else {
@@ -137,6 +155,38 @@ class ReelAccessibilityService : AccessibilityService() {
         return false
     }
 
+    /** Is the reel player on screen, and which reel is it (token hashes, null if unreadable)? */
+    private fun inspect(root: AccessibilityNodeInfo, pkg: String, app: ShortVideoApp): Pair<Boolean, Set<Int>?> {
+        if (app.layoutDetected) {
+            val metrics = resources.displayMetrics
+            val result = RailDetector.detect(snapshot(root), metrics.widthPixels, metrics.heightPixels)
+            return result.isReel to result.tokens
+        }
+        val visible = app.wholeAppIsSurface || hasFullScreenSurface(root, pkg, app)
+        return visible to (if (visible) currentReelTokens(root, pkg, app) else null)
+    }
+
+    /** Visible nodes as plain snapshots for layout detection, breadth-first and bounded. */
+    private fun snapshot(root: AccessibilityNodeInfo): List<NodeSnap> {
+        val out = ArrayList<NodeSnap>(256)
+        val queue = ArrayDeque<AccessibilityNodeInfo>()
+        queue.addLast(root)
+        var visited = 0
+        while (queue.isNotEmpty() && visited < MAX_LAYOUT_NODES) {
+            val n = queue.removeFirst()
+            visited++
+            if (n.isVisibleToUser) {
+                n.getBoundsInScreen(bounds)
+                out += NodeSnap(
+                    bounds.left, bounds.top, bounds.right, bounds.bottom,
+                    n.text?.toString(), n.contentDescription?.toString(), n.className?.toString(),
+                )
+            }
+            for (i in 0 until n.childCount) n.getChild(i)?.let(queue::addLast)
+        }
+        return out
+    }
+
     /** Patched forks keep the original resource package, so try it too. */
     private fun resourcePackages(pkg: String, app: ShortVideoApp) = listOf(pkg, app.packageNames.first()).distinct()
 
@@ -153,7 +203,7 @@ class ReelAccessibilityService : AccessibilityService() {
         if (!isReelPager(source, app)) return
         val position = if (e.itemCount > 0 && e.fromIndex >= 0) e.fromIndex else null
         val root = rootInActiveWindow
-        val tokens = if (root != null && root.packageName?.toString() == pkg) currentReelTokens(root, pkg, app) else null
+        val tokens = if (root != null && root.packageName?.toString() == pkg) inspect(root, pkg, app).second else null
         if (tracker.onScroll(pkg, position, now, tokens)) runtime.onReel(pkg, now)
     }
 
@@ -236,6 +286,7 @@ class ReelAccessibilityService : AccessibilityService() {
         private const val MAX_PAGES = 8
         private const val MAX_TEXT_NODES = 60
         private const val MAX_TEXT_CHARS = 2_000
+        private const val MAX_LAYOUT_NODES = 700
         private const val MAX_PARENT_DEPTH = 4
         private const val MAX_CACHE = 500
         private const val OWN_UI_PREFIX = "com.brainrot.pet.ui."

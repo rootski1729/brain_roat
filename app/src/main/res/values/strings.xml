@@ -155,7 +155,7 @@
     <string name="settings_speech">Speech bubbles</string>
     <string name="settings_speech_desc">Little comments about how it feels.</string>
     <string name="settings_reels">Count reels</string>
-    <string name="settings_reels_desc">Uses the accessibility service on YouTube, Instagram, TikTok and Snapchat.</string>
+    <string name="settings_reels_desc">Uses the accessibility service on YouTube, Instagram, Facebook, TikTok and Snapchat.</string>
     <string name="settings_bubble_size">Bubble size: %1$d dp</string>
     <string name="reels_off_message">You have reel limits. With counting off they stop working, so this takes the same pause as loosening a limit.</string>
     <string name="reels_off_confirm">Turn off reel counting</string>
@@ -206,7 +206,7 @@
     <string name="disclosure_title">How Brain Rot uses Accessibility</string>
     <string name="disclosure_body">Brain Rot uses the Android Accessibility Service API to:
 
-• detect when YouTube Shorts, Instagram Reels, TikTok or Snapchat Spotlight is on screen and count each new video. To tell one video from the next it reads the caption and author name of the video on screen; these are turned into anonymous numbers in memory immediately and are never saved or sent;
+• detect when YouTube Shorts, Instagram Reels, Facebook Reels, TikTok or Snapchat Spotlight is on screen and count each new video. To tell one video from the next it reads the caption and author name of the video on screen; these are turned into anonymous numbers in memory immediately and are never saved or sent;
 • notice which app you open, so your limits apply right away;
 • go Home or Back only when you tap a button on the block screen.
 
@@ -251,5 +251,5 @@ You can turn it off at any time in Settings → Accessibility.</string>
 
     <!-- Accessibility service -->
     <string name="accessibility_label">Brain Rot reel counter</string>
-    <string name="accessibility_description">Counts videos in YouTube Shorts, Instagram Reels, TikTok and Snapchat Spotlight, and applies the limits you set in Brain Rot. Reads only the current video\'s caption and author inside those players, as anonymous numbers in memory. Nothing is stored except counts, and nothing leaves your phone.</string>
+    <string name="accessibility_description">Counts videos in YouTube Shorts, Instagram Reels, Facebook Reels, TikTok and Snapchat Spotlight, and applies the limits you set in Brain Rot. Reads only the current video\'s caption and author inside those players, as anonymous numbers in memory. Nothing is stored except counts, and nothing leaves your phone.</string>
 </resources>

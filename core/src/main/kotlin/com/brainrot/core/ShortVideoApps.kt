@@ -6,7 +6,8 @@ package com.brainrot.core
  * patched forks that keep the resource names under another package.
  *
  * Ids were cross-checked against open-source detectors (DetoxDroid, Scrolless, curbox, Mindful) in
- * Oct 2026; none of their code is copied here. Facebook Reels has no stable ids and is not listed.
+ * Oct 2026; none of their code is copied here. Facebook Reels has no stable ids, so it is recognised
+ * by layout instead ([RailDetector]).
  * To add or refresh an app: open its reels player, run `adb shell uiautomator dump`, and look for
  * the full-screen pager.
  */
@@ -24,6 +25,8 @@ data class ShortVideoApp(
      * ([ReelFingerprints]). Empty means "use the most visible page of the pager".
      */
     val captionIds: List<String> = emptyList(),
+    /** No usable view ids: recognise the player by layout with [RailDetector] (Facebook). */
+    val layoutDetected: Boolean = false,
 )
 
 object ShortVideoApps {
@@ -39,7 +42,8 @@ object ShortVideoApps {
         label = "Instagram Reels",
         surfaceIds = listOf("clips_viewer_view_pager", "clips_video_container"),
         pagerIds = listOf("clips_viewer_view_pager"),
-        captionIds = listOf("clips_author_username", "clips_captions_component"),
+        // The video container's description changes per reel; caption id spelling varies by version.
+        captionIds = listOf("clips_video_container", "clips_author_username", "clips_caption_component", "clips_captions_component"),
     )
     val TIKTOK = ShortVideoApp(
         packageNames = setOf("com.zhiliaoapp.musically", "com.ss.android.ugc.trill", "com.ss.android.ugc.aweme"),
@@ -54,7 +58,14 @@ object ShortVideoApps {
         surfaceIds = listOf("spotlight_container"),
     )
 
-    val all: List<ShortVideoApp> = listOf(YOUTUBE, INSTAGRAM, TIKTOK, SNAPCHAT)
+    val FACEBOOK = ShortVideoApp(
+        packageNames = setOf("com.facebook.katana"),
+        label = "Facebook Reels",
+        surfaceIds = emptyList(),
+        layoutDetected = true,
+    )
+
+    val all: List<ShortVideoApp> = listOf(YOUTUBE, INSTAGRAM, TIKTOK, SNAPCHAT, FACEBOOK)
 
     private val byPackage: Map<String, ShortVideoApp> = all.flatMap { app -> app.packageNames.map { it to app } }.toMap()
 
